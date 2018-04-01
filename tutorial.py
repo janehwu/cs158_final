@@ -38,6 +38,27 @@ def get_tweets(api, username, year, filename):
 		if len(tweets) < 20:
 			return
 
+"""
+Search tweets by query
+"""
+def search_tweets(api,filename, query, count):
+	f = open(filename, 'w')
+	
+	tweets = api.search(q = query, count = count, show_user = "true")
+	
+	for tweet in tweets:
+		print "Adding"
+		text = tweet.text.encode("utf-8")
+		print tweet.user.screen_name
+		f.write(text + '\n')
+			
+	print "Done"
+	print tweet.created_at.year
+	f.close()
+	return
+		
+		
+		
 def main():
 	api = setup()
 
