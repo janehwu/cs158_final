@@ -19,25 +19,29 @@ Get _username_'s tweets from _year_
 def get_tweets(api, username, year, filename):
 	f = open(filename, 'w')
 	page = 1
-	deadend = False
+	
 	while True:
 		tweets = api.user_timeline(username, page=page)
 
 		for tweet in tweets:
-			tweet_year = tweet.created_at.year
-			if tweet_year == year:
+			if  tweet.created_at.year == year:
 				print "Adding"
 				text = tweet.text.encode("utf-8")
-				f.write(text)
-				f.write('\n')
-			elif tweet_year < year:
-				print "Ending"
+				f.write(text + '\n')
+				
+
+			elif tweet.created_at.year < year:
+				print "Done"
 				print tweet.created_at.year
-				deadend = True
 				f.close()
 				return
-		if not deadend:
-			page+=1
+
+		#If there are no more tweets, return
+		if len(tweets) < 20:
+			return
+
+		page+=1
+
 
 def main():
 	api = setup()
@@ -53,3 +57,4 @@ def main():
 	#     print tweet.text
 
 main()
+
