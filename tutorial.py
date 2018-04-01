@@ -18,38 +18,31 @@ Get _username_'s tweets from _year_
 '''
 def get_tweets(api, username, year, filename):
 	f = open(filename, 'w')
-	page = 1
-	deadend = False
-	while True:
+	start = 49
+	end = 100
+	for page in range(start, end):
 		tweets = api.user_timeline(username, page=page)
-
+		print page, "First tweet:", tweets[0].created_at
 		for tweet in tweets:
 			tweet_year = tweet.created_at.year
 			if tweet_year == year:
-				print "Adding"
 				text = tweet.text.encode("utf-8")
 				f.write(text)
 				f.write('\n')
 			elif tweet_year < year:
 				print "Ending"
 				print tweet.created_at.year
-				deadend = True
 				f.close()
 				return
-		if not deadend:
-			page+=1
 
 def main():
 	api = setup()
 
 	get_tweets(api, 'KimKardashian', 2017, 'kim_tweets_2017.txt')
 
-	# kim_tweets = api.user_timeline(screen_name='KimKardashian', count=1, include_rts=True)
+	# kim_tweets = api.user_timeline(screen_name='KimKardashian', page=2)
+	# print len(kim_tweets)
 	# for tweet in kim_tweets:
-	# 	print tweet.created_at.year == 2018
-
-	# public_tweets = api.home_timeline()
-	# for tweet in public_tweets:
-	#     print tweet.text
+	# 	print tweet.created_at.year
 
 main()
