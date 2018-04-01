@@ -26,14 +26,17 @@ def get_tweets(api, username, year, filename):
 		for tweet in tweets:
 			tweet_year = tweet.created_at.year
 			if tweet_year == year:
+				print "Adding"
 				text = tweet.text.encode("utf-8")
-				f.write(text)
-				f.write('\n')
-			elif tweet_year < year:
-				print "Ending"
+				f.write(text + '\n')
+			elif tweet.created_at.year < year:
+				print "Done"
 				print tweet.created_at.year
 				f.close()
 				return
+		#If there are no more tweets, return
+		if len(tweets) < 20:
+			return
 
 def main():
 	api = setup()
@@ -46,3 +49,4 @@ def main():
 	# 	print tweet.created_at.year
 
 main()
+
