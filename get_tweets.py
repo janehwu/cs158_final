@@ -1,3 +1,5 @@
+# Download/format all tweets
+
 import tweepy, datetime
 
 
@@ -16,19 +18,18 @@ def setup():
 '''
 Get _username_'s tweets from _year_
 '''
-def get_tweets(api, username, year, filename):
+def get_tweets(api, username, year, filename, start=66, end=200):
 	f = open(filename, 'w')
-	start = 1
-	end = 50
 	for page in range(start, end):
 		tweets = api.user_timeline(username, page=page)
 		print page, "First tweet:", tweets[0].created_at
 		for tweet in tweets:
 			tweet_year = tweet.created_at.year
-			if tweet_year == year or tweet_year == year-1:
+			if tweet_year == year:
+				print "Adding"
 				text = tweet.text.encode("utf-8")
 				f.write(text + '\n')
-			elif tweet_year < year:
+			elif tweet.created_at.year < year:
 				print "Done"
 				print tweet.created_at.year
 				f.close()
@@ -44,11 +45,11 @@ def clean_tweets(oldfile, newfile):
 		for line in f_old:
 			words = line.split(" ")
 
-			if words[0] != 'RT':
+			if words[0] != 'RT': # Exclude re-tweets
 				new_line = ""
 				for i in range(len(words)):
 					w = words[i]
-					if (len(w) > 5) and (w[:5] == 'https'):
+					if (len(w) > 5) and (w[:5] == 'https'): # Remove URLs
 						'ignoring', w
 						new_line += '\n'
 						break
@@ -63,16 +64,13 @@ def clean_tweets(oldfile, newfile):
 def main():
 	api = setup()
 
-	#clean_tweets('data/kim_tweets_2017.txt', 'data/kim_tweets.txt')
-	clean_tweets('data/obama_tweets_2017.txt', 'data/obama_tweets.txt')
+	# Download tweets
+	#get_tweets(api, 'KimKardashian', 2017, 'data/kimk_tweets_2017.txt', start=30, end=150)
+	#get_tweets(api, 'khloekardashian', 2017, 'data/khloe_tweets_2017.txt', start=66, end=163)
 
-	#get_tweets(api, 'KimKardashian', 2017, 'kim_tweets_2017.txt')
-	#get_tweets(api, 'Barackobama', 2017, 'obama_tweets_2017.txt')
-
-	# obama_tweets = api.user_timeline(screen_name='BarackObama', page=1)
-	# print len(obama_tweets)
-	# for tweet in obama_tweets:
-	# 	print tweet.text
+	# Re-format tweets
+	#clean_tweets('data/kimk_tweets_2017.txt', 'final_data/kim_tweets.txt')
+	#clean_tweets('data/khloe_tweets_2017.txt', 'final_data/khloe_tweets.txt')
 
 main()
 
