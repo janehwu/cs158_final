@@ -546,13 +546,14 @@ def plot_results(metrics, classifiers, *args):
  
 def main() :
     # read the tweets and its labels
-    dictionary = extract_dictionary('data/tweets.txt')
-    X = extract_feature_vectors('data/tweets.txt', dictionary)
-    print X.shape
-    print dictionary.keys()
-    return
+    dictionary = extract_dictionary('data/alltweets.txt')
+    X = extract_feature_vectors('data/alltweets.txt', dictionary)
 
-    y = read_vector_file('../data/labels.txt')
+    y = read_vector_file('data/labels.txt')
+
+    print "YOOO"
+    print len(X)
+    print len(y)
     
     # shuffle data (since file has tweets ordered by movie)
     X, y = shuffle(X, y, random_state=0)
@@ -566,55 +567,52 @@ def main() :
     
     metric_list = ["accuracy", "f1_score", "auroc", "precision", "sensitivity", "specificity"]
     
-    ### ========== TODO : START ========== ###
     test_performance()
     
-    # part 2b: create stratified folds (5-fold CV)
-    skf = StratifiedKFold(n_splits=5)
+    # # Create stratified folds (5-fold CV)
+    # skf = StratifiedKFold(n_splits=5)
     
-    # part 2d: for each metric, select optimal hyperparameter for linear-kernel SVM using CV
-    linear_C = [] # optimal C values for each metric in metric_list
-    for metric in metric_list:
-        linear_C.append(select_param_linear(X_train, y_train, skf, metric=metric))
-    plt.legend(loc=4)
-    plt.xlabel('C')
-    plt.ylabel('score')
-    plt.show()
+    # # For each metric, select optimal hyperparameter for linear-kernel SVM using CV
+    # linear_C = [] # optimal C values for each metric in metric_list
+    # for metric in metric_list:
+    #     linear_C.append(select_param_linear(X_train, y_train, skf, metric=metric))
+    # plt.legend(loc=4)
+    # plt.xlabel('C')
+    # plt.ylabel('score')
+    # plt.show()
     
-    # part 3c: for each metric, select optimal hyperparameter for RBF-SVM using CV
-    rbf_C = [] # optimal C values for each metric in metric_list
-    for metric in metric_list:
-        rbf_C.append(select_param_rbf(X_train, y_train, skf, metric=metric))
-    print rbf_C
+    # # For each metric, select optimal hyperparameter for RBF-SVM using CV
+    # rbf_C = [] # optimal C values for each metric in metric_list
+    # for metric in metric_list:
+    #     rbf_C.append(select_param_rbf(X_train, y_train, skf, metric=metric))
+    # print rbf_C
     
-    # part 4a: train linear- and RBF-kernel SVMs with selected hyperparameters
-    print "Fitting linear-kernel SVM..."
-    linear_clf = SVC(C=100, kernel='linear')
-    linear_clf.fit(X_train, y_train)
-    print "Fitting RBF-kernel SVM..."
-    rbf_clf = SVC(C=100, kernel='rbf', gamma=0.01)
-    rbf_clf.fit(X_train, y_train)
+    # # part 4a: train linear- and RBF-kernel SVMs with selected hyperparameters
+    # print "Fitting linear-kernel SVM..."
+    # linear_clf = SVC(C=100, kernel='linear')
+    # linear_clf.fit(X_train, y_train)
+    # print "Fitting RBF-kernel SVM..."
+    # rbf_clf = SVC(C=100, kernel='rbf', gamma=0.01)
+    # rbf_clf.fit(X_train, y_train)
 
 
-    # part 4c: use bootstrapping to report performance on test data
-    #          use plot_results(...) to make plot
-    base_clf = DummyClassifier()
-    base_clf.fit(X_train, y_train)
+    # base_clf = DummyClassifier()
+    # base_clf.fit(X_train, y_train)
 
-    baseline_results = []
-    linear_results = []
-    rbf_results = []
+    # baseline_results = []
+    # linear_results = []
+    # rbf_results = []
 
-    for metric in metric_list:
-        print "Evaluating performance using", metric
-        baseline_results.append(performance_CI(base_clf, X_test, y_test, metric=metric))
-        print "Finished baseline"
-        linear_results.append(performance_CI(linear_clf, X_test, y_test, metric=metric))
-        print "Finished linear"
-        rbf_results.append(performance_CI(rbf_clf, X_test, y_test, metric=metric))
-        print "Finished rbf"
+    # for metric in metric_list:
+    #     print "Evaluating performance using", metric
+    #     baseline_results.append(performance_CI(base_clf, X_test, y_test, metric=metric))
+    #     print "Finished baseline"
+    #     linear_results.append(performance_CI(linear_clf, X_test, y_test, metric=metric))
+    #     print "Finished linear"
+    #     rbf_results.append(performance_CI(rbf_clf, X_test, y_test, metric=metric))
+    #     print "Finished rbf"
 
-    plot_results(metric_list, ("Linear-kernel SVM", "RBF-kernel SVM"),baseline_results,linear_results,rbf_results)
+    # plot_results(metric_list, ("Linear-kernel SVM", "RBF-kernel SVM"),baseline_results,linear_results,rbf_results)
     
     # part 5: identify important features
     coef = linear_clf.coef_[0]
@@ -630,21 +628,6 @@ def main() :
 
     top_pos_words = [words[i] for i in top_pos_i]
     top_neg_words = [words[i] for i in top_neg_i]
-    print "Top words in positive tweets"
-    print top_pos_words
-    print "Top words in negative tweets"
-    print top_neg_words
-
-    # Plot highest coefficients
-    top_coef = np.array(np.hstack([neg_coef,pos_coef]))
-    feature_names = np.hstack([top_neg_words, top_pos_words])
-    print top_coef
-
-    colors = ['red' if c < 0 else 'blue' for c in top_coef]
-    plt.bar(np.arange(20), top_coef, color=colors)
-    feature_names = np.array(feature_names)
-    plt.xticks(np.arange(0, 20), feature_names, rotation=60, ha='right')
-    plt.show()
 
     # Plot highest coefficients
     def plot_coefficients(classifier, feature_names, top_features=20):
@@ -660,18 +643,6 @@ def main() :
         plt.xticks(np.arange(1, 1 + 2 * top_features), feature_names[top_coefficients], rotation=60, ha='right')
         plt.show()
     
-    ### ========== TODO : END ========== ###
-    
-    ### ========== TODO : START ========== ###
-    # Twitter contest
-    # uncomment out the following, and be sure to change the filename
-    """
-    X_held = extract_feature_vectors('../data/held_out_tweets.txt', dictionary)
-    # your code here
-    # y_pred = best_clf.decision_function(X_held)
-    write_label_answer(y_pred, '../data/yjw_twitter.txt')
-    """
-    ### ========== TODO : END ========== ###
 
 
 if __name__ == "__main__" :
