@@ -49,28 +49,49 @@ def clean_tweets(oldfile, newfile):
 				new_line = ""
 				for i in range(len(words)):
 					w = words[i]
-					if (len(w) > 5) and (w[:5] == 'https'): # Remove URLs
-						'ignoring', w
+					if len(w) > 0 and w[0] == '@':
+						print 'removing @', w
+						continue
+					elif (len(w) > 5) and (w[:5] == 'https'): # Remove URLs (always at end)
+						print 'ignoring', w
 						new_line += '\n'
 						break
 					new_line += w
+
 					if i != len(words) - 1:
 						new_line += ' '
+				
 				if new_line != '\n':
 					f_new.write(new_line)
 	f_new.close()
 
+def combine_tweets(pos_file, neg_file):
+	pos_f = open(pos_file, 'r')
+	neg_f = open(neg_file, 'r')
+	f = open('final_data/all_tweets.txt', 'w')
+	labels = open('final_data/labels.txt', 'w')
+	for line in pos_f.readlines():
+		f.write(line)
+		labels.write('1\n')
+	for line in neg_f.readlines():
+		f.write(line)
+		labels.write('-1\n')
+	pos_f.close()
+	neg_f.close()
+	f.close()
+	labels.close()
 
 def main():
 	api = setup()
+	combine_tweets('final_data/kim_tweets_clean.txt', 'final_data/khloe_tweets_clean.txt')
 
 	# Download tweets
 	#get_tweets(api, 'KimKardashian', 2017, 'data/kimk_tweets_2017.txt', start=30, end=150)
 	#get_tweets(api, 'khloekardashian', 2017, 'data/khloe_tweets_2017.txt', start=66, end=163)
 
 	# Re-format tweets
-	#clean_tweets('data/kimk_tweets_2017.txt', 'final_data/kim_tweets.txt')
-	#clean_tweets('data/khloe_tweets_2017.txt', 'final_data/khloe_tweets.txt')
+	#clean_tweets('raw_data/kim_tweets_2017.txt', 'final_data/kim_tweets_clean.txt')
+	#clean_tweets('raw_data/khloe_tweets_2017.txt', 'final_data/khloe_tweets_clean.txt')
 
 main()
 
