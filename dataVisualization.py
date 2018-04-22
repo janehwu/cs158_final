@@ -134,6 +134,23 @@ def num_emojis_per_tweet(fname):
 	return countList
 
 
+def num_exclamation_per_tweet(fname):
+	countList = []
+
+	with open(fname) as f:
+		tweets = f.readlines()
+
+	for tweet in tweets:
+		yelling = []
+		for char in tweet:
+			if char == '!':
+				yelling.append(char)
+		countList.append(len(yelling))
+	return countList
+
+
+
+
 """Given file of tweets, """
 def percentage_tweets_with_punctuationth_emojis(fname):
 	with open(fname) as f:
@@ -146,6 +163,8 @@ def percentage_tweets_with_punctuationth_emojis(fname):
 	numTweets = len(tweets)
 
 	return emojicount/numTweets 
+
+
 
 
 
@@ -179,7 +198,7 @@ def autolabel(rects):
     """
     for rect in rects:
         height = rect.get_height()
-        ax1.text(rect.get_x() + rect.get_width()/2.0, 1.05*height, '%.3f' % height,
+        ax1.text(rect.get_x() + rect.get_width()/2.0, 1.015*height, '%.3f' % height,
                 ha='center', va='bottom')
 
 
@@ -191,15 +210,16 @@ N = 5
 ind = np.arange(N)
 width = 0.35
 
-kimScores = percentage_tweets_with_punctuation("raw_data/kim_tweets_2017.txt")
-khloeScores = percentage_tweets_with_punctuation("raw_data/khloe_tweets_2017.txt")
+kimScores = percentage_tweets_with_punctuation("final_data/kim_tweets_clean.txt")
+khloeScores = percentage_tweets_with_punctuation("final_data/khloe_tweets_clean.txt")
 
 fig1, ax1 = plt.subplots()
 rects1 = ax1.bar(ind, kimScores, width, color="m")
 rects2 = ax1.bar(ind+width, khloeScores, width, color="y")
 
-
-ax1.set_ylabel("percentage of tweets")
+ax1.set_title("Percentage of Tweets with Punctuation")
+ax1.set_ylabel("Percentage")
+ax1.set_xlabel("Punctuation")
 ax1.set_xticks(ind+width/2)
 ax1.set_xticklabels(('comma', 'period', 'semicolon', 'colon', 'exclamation'))
 ax1.legend((rects1[0], rects2[0]), ('Kim', 'Khloe'))
@@ -229,11 +249,12 @@ for i in x:
 
 
 #the histogram of the data
-n, bins, patches = ax.hist(xx, numbins)
+n, bins, patches = ax.hist(xx, numbins, color="m")
 
 #ax.plot(bins, y, '--')
 ax.set_ylabel('Number of tweets')
-ax.set_title('Number of emojis per tweet')
+ax.set_xlabel("Number of emojis")
+ax.set_title('Number of emojis per Kim tweet')
 
 fig.tight_layout()
 plt.show()
@@ -257,14 +278,72 @@ for i in x:
 
 
 #the histogram of the data
-n, bins, patches = ax.hist(xx, numbins)
+n, bins, patches = ax.hist(xx, numbins, color = 'y')
 
 #ax.plot(bins, y, '--')
 ax.set_ylabel('Number of tweets')
-ax.set_title('Number of emojis per tweet')
+ax.set_xlabel("Number of emojis")
+ax.set_title('Number of emojis per Khloe tweet')
 
 fig.tight_layout()
 plt.show()
 
 
 
+
+"""
+Graph number of exclamations per Kim tweet
+"""
+
+numbins = 20
+fig, ax = plt.subplots()
+x = num_exclamation_per_tweet("final_data/kim_tweets_clean.txt")
+print x
+print "LENGTH OF X"
+print len(x)
+
+xx = []
+for i in x:
+	if i < 35:
+		xx.append(i)
+
+
+#the histogram of the data
+n, bins, patches = ax.hist(xx, numbins, color = 'm')
+
+#ax.plot(bins, y, '--')
+ax.set_ylabel('Number of tweets')
+ax.set_xlabel("Number of exclamations")
+ax.set_title('Number of exclamations per Kim tweet')
+
+fig.tight_layout()
+plt.show()
+
+
+"""
+Graph number of exclamations per Khloe tweet
+"""
+
+numbins = 20
+fig, ax = plt.subplots()
+x = num_exclamation_per_tweet("final_data/khloe_tweets_clean.txt")
+print x
+print "LENGTH OF X"
+print len(x)
+
+xx = []
+for i in x:
+	if i < 35:
+		xx.append(i)
+
+
+#the histogram of the data
+n, bins, patches = ax.hist(xx, numbins, color = 'y')
+
+#ax.plot(bins, y, '--')
+ax.set_ylabel('Number of tweets')
+ax.set_xlabel("Number of exclamations")
+ax.set_title('Number of exclamations per Khloe tweet')
+
+fig.tight_layout()
+plt.show()
