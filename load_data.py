@@ -7,7 +7,7 @@ TF-IDF
 def tfidf(filename):
 	with open(filename, 'r') as f:
 		vectorizer = TfidfVectorizer()
-		return vectorizer.fit_transform(f)
+		return vectorizer.fit_transform(f).toarray()
 
 def labels(filename):
 	y = []
@@ -22,4 +22,23 @@ def get_data():
 	y = labels('final_data/labels.txt')
 	print X.shape
 	print y.shape
-	return X,y
+	return Data(X,y)
+
+######################################################################
+# classes
+######################################################################
+
+class Data :
+    def __init__(self, X=None, y=None) :
+        """
+        Data class.
+        
+        Attributes
+        --------------------
+            X       -- numpy array of shape (n,d), features
+            y       -- numpy array of shape (n,), targets
+        """
+        
+        # n = number of examples, d = dimensionality
+        self.X = X
+        self.y = y

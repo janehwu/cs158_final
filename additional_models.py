@@ -14,7 +14,9 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.utils import shuffle
 from sklearn.metrics import accuracy_score
 from sklearn.linear_model import LogisticRegression
-from sklearn.feature_extraction.text import TfidfVectorizer
+
+from load_data import *
+from dataVisualization import *
 
 def performance(y_true, y_pred, metric="accuracy") :
 	"""
@@ -300,27 +302,22 @@ def random_forest_classifier(features, target):
 	clf.fit(features, target)
 	return clf
 
-def tfidf(filename):
-	with open(filename, 'r') as f:
-		vectorizer = TfidfVectorizer()
-		return vectorizer.fit_transform(f)
-
-def labels(filename):
-	y = []
-	with open(filename, 'r') as f:
-		for line in f.readlines():
-			y.append(int(line))
-	return np.asarray(y)
-
 def main():
 	print "Hey"
 	np.random.seed(1234)
 
 	# read the tweets and its labels
-	#dictionary = extract_dictionary('final_data/all_tweets.txt')
-	X = tfidf('final_data/all_tweets.txt')
+	data_file = 'final_data/all_tweets.txt'
+	label_file = 'final_data/labels.txt'
+	tweets = read_tweets(data_file)
+	print len(tweets)
 
-	y = labels('final_data/labels.txt')
+	dictionary = extract_dictionary(data_file)
+	X = extract_feature_vectors(data_file, dictionary)
+	# y = read_vector_file('data/labels.txt')
+	#X = tfidf('final_data/all_tweets.txt')
+	print X.shape
+	y = labels(label_file)
 
 	# shuffle data (since file has tweets ordered by author)
 	X, y = shuffle(X, y)
@@ -346,23 +343,23 @@ def main():
 	logistic_results = []
 
 	print "Dummy"
-	# dummy_results.append(performance_CI(base_clf, X_test, y_test, "f1_score"))
-	# dummy_results.append(performance_CI(base_clf, X_test, y_test, "accuracy"))
+	dummy_results.append(performance_CI(base_clf, X_test, y_test, "f1_score"))
+	dummy_results.append(performance_CI(base_clf, X_test, y_test, "accuracy"))
 
-	# print "Linear SVN"
-	# rbf_results.append(performance_CI(linear_clf, X_test, y_test, "f1_score"))
-	# rbf_results.append(performance_CI(linear_clf, X_test, y_test, "accuracy"))
+	print "Linear SVN"
+	rbf_results.append(performance_CI(linear_clf, X_test, y_test, "f1_score"))
+	rbf_results.append(performance_CI(linear_clf, X_test, y_test, "accuracy"))
 
-	# print "Random Forest"
-	# rf_results.append(performance_CI(trained_rf, X_test, y_test, "f1_score"))
-	# rf_results.append(performance_CI(trained_rf, X_test, y_test, "accuracy"))
+	print "Random Forest"
+	rf_results.append(performance_CI(trained_rf, X_test, y_test, "f1_score"))
+	rf_results.append(performance_CI(trained_rf, X_test, y_test, "accuracy"))
 
-	# print "Logistic Regression"
-	# logistic_results.append(performance_CI(linear_clf, X_test, y_test, "f1_score"))
-	# logistic_results.append(performance_CI(linear_clf, X_test, y_test, "accuracy"))
+	print "Logistic Regression"
+	logistic_results.append(performance_CI(linear_clf, X_test, y_test, "f1_score"))
+	logistic_results.append(performance_CI(linear_clf, X_test, y_test, "accuracy"))
 
-	# print "now plotting"	
-	# plot_results(["accuracy", "auroc"], ("Random Forest", "SVN", "Logistic Regression"), dummy_results, rf_results, rbf_results, logistic_results)
+	print "now plotting"	
+	plot_results(["accuracy", "f1 score"], ("Random Forest", "SVN", "Logistic Regression"), dummy_results, rf_results, rbf_results, logistic_results)
 
 if __name__ == "__main__" :
 	main()
