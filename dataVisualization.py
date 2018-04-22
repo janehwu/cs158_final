@@ -204,155 +204,149 @@ def autolabel(rects):
 
 
 
-def main():
-	"""
-	Graph percentage tweets with punctuation
-	"""
+"""
+Graph percentage tweets with punctuation
+"""
 
-	N = 5
-	ind = np.arange(N)
-	width = 0.35
+N = 5
+ind = np.arange(N)
+width = 0.35
 
-	kimScores = percentage_tweets_with_punctuation("final_data/kim_tweets_clean.txt")
-	khloeScores = percentage_tweets_with_punctuation("final_data/khloe_tweets_clean.txt")
+kimScores = percentage_tweets_with_punctuation("final_data/kim_tweets_clean.txt")
+khloeScores = percentage_tweets_with_punctuation("final_data/khloe_tweets_clean.txt")
 
-	fig1, ax1 = plt.subplots()
-	rects1 = ax1.bar(ind, kimScores, width, color="m")
-	rects2 = ax1.bar(ind+width, khloeScores, width, color="y")
+fig1, ax1 = plt.subplots()
+rects1 = ax1.bar(ind, kimScores, width, color="m")
+rects2 = ax1.bar(ind+width, khloeScores, width, color="y")
 
-	ax1.set_title("Percentage of Tweets with Punctuation")
-	ax1.set_ylabel("Percentage")
-	ax1.set_xlabel("Punctuation")
-	ax1.set_xticks(ind+width/2)
-	ax1.set_xticklabels(('comma', 'period', 'semicolon', 'colon', 'exclamation'))
-	ax1.legend((rects1[0], rects2[0]), ('Kim', 'Khloe'))
-
-
-	autolabel(rects1)
-	autolabel(rects2)
-
-	plt.show()
+ax1.set_title("Percentage of Tweets with Punctuation")
+ax1.set_ylabel("Percentage")
+ax1.set_xlabel("Punctuation")
+ax1.set_xticks(ind+width/2)
+ax1.set_xticklabels(('comma', 'period', 'semicolon', 'colon', 'exclamation'))
+ax1.legend((rects1[0], rects2[0]), ('Kim', 'Khloe'))
 
 
+autolabel(rects1)
+autolabel(rects2)
 
-	"""
-	Graph number of emojis per Kim tweet
-	"""
-	numbins = 20
-	fig, ax = plt.subplots()
-	x = num_emojis_per_tweet("raw_data/kim_tweets_2017.txt")
-	print x
-	print "LENGTH OF X"
-	print len(x)
-
-	xx = []
-	for i in x:
-		if i < 35:
-			xx.append(i)
-
-
-	#the histogram of the data
-	n, bins, patches = ax.hist(xx, numbins, color="m")
-
-	#ax.plot(bins, y, '--')
-	ax.set_ylabel('Number of tweets')
-	ax.set_xlabel("Number of emojis")
-	ax.set_title('Number of emojis per Kim tweet')
-
-	fig.tight_layout()
-	plt.show()
-
-
-	"""
-	Graph number of emojis per Khloe tweet
-	"""
-
-	numbins = 20
-	fig, ax = plt.subplots()
-	x = num_emojis_per_tweet("raw_data/khloe_tweets_2017.txt")
-	print x
-	print "LENGTH OF X"
-	print len(x)
-
-	xx = []
-	for i in x:
-		if i < 35:
-			xx.append(i)
-
-
-	#the histogram of the data
-	n, bins, patches = ax.hist(xx, numbins, color = 'y')
-
-	#ax.plot(bins, y, '--')
-	ax.set_ylabel('Number of tweets')
-	ax.set_xlabel("Number of emojis")
-	ax.set_title('Number of emojis per Khloe tweet')
-
-	fig.tight_layout()
-	plt.show()
+plt.show()
 
 
 
+"""
+Graph number of emojis per Kim tweet
+"""
+numbins = 20
+fig, ax = plt.subplots()
+x = num_emojis_per_tweet("raw_data/kim_tweets_2017.txt")
+print x
+print "LENGTH OF X"
+print len(x)
 
-	"""
-	Graph number of exclamations per Kim tweet
-	"""
-
-	numbins = 20
-	fig, ax = plt.subplots()
-	x = num_exclamation_per_tweet("final_data/kim_tweets_clean.txt")
-	print x
-	print "LENGTH OF X"
-	print len(x)
-
-	xx = []
-	for i in x:
-		if i < 35:
-			xx.append(i)
+xx = []
+for i in x:
+	if i < 35:
+		xx.append(i)
 
 
-	#the histogram of the data
-	n, bins, patches = ax.hist(xx, numbins, color = 'm')
+#the histogram of the data
+n, bins, patches = ax.hist(xx, numbins, color="m")
 
-	#ax.plot(bins, y, '--')
-	ax.set_ylabel('Number of tweets')
-	ax.set_xlabel("Number of exclamations")
-	ax.set_title('Number of exclamations per Kim tweet')
+#ax.plot(bins, y, '--')
+ax.set_ylabel('Number of tweets')
+ax.set_xlabel("Number of emojis")
+ax.set_title('Number of emojis per Kim tweet')
 
-	fig.tight_layout()
-	plt.show()
-
-
-	"""
-	Graph number of exclamations per Khloe tweet
-	"""
-
-	numbins = 20
-	fig, ax = plt.subplots()
-	x = num_exclamation_per_tweet("final_data/khloe_tweets_clean.txt")
-	print x
-	print "LENGTH OF X"
-	print len(x)
-
-	xx = []
-	for i in x:
-		if i < 35:
-			xx.append(i)
+fig.tight_layout()
+plt.show()
 
 
-	#the histogram of the data
-	n, bins, patches = ax.hist(xx, numbins, color = 'y')
+"""
+Graph number of emojis per Khloe tweet
+"""
 
-	#ax.plot(bins, y, '--')
-	ax.set_ylabel('Number of tweets')
-	ax.set_xlabel("Number of exclamations")
-	ax.set_title('Number of exclamations per Khloe tweet')
+numbins = 20
+fig, ax = plt.subplots()
+x = num_emojis_per_tweet("raw_data/khloe_tweets_2017.txt")
+print x
+print "LENGTH OF X"
+print len(x)
 
-	fig.tight_layout()
-	plt.show()
+xx = []
+for i in x:
+	if i < 35:
+		xx.append(i)
+
+
+#the histogram of the data
+n, bins, patches = ax.hist(xx, numbins, color = 'y')
+
+#ax.plot(bins, y, '--')
+ax.set_ylabel('Number of tweets')
+ax.set_xlabel("Number of emojis")
+ax.set_title('Number of emojis per Khloe tweet')
+
+fig.tight_layout()
+plt.show()
 
 
 
 
-if __name__ == "__main__" :
-	main()
+"""
+Graph number of exclamations per Kim tweet
+"""
+
+numbins = 20
+fig, ax = plt.subplots()
+x = num_exclamation_per_tweet("final_data/kim_tweets_clean.txt")
+print x
+print "LENGTH OF X"
+print len(x)
+
+xx = []
+for i in x:
+	if i < 35:
+		xx.append(i)
+
+
+#the histogram of the data
+n, bins, patches = ax.hist(xx, numbins, color = 'm')
+
+#ax.plot(bins, y, '--')
+ax.set_ylabel('Number of tweets')
+ax.set_xlabel("Number of exclamations")
+ax.set_title('Number of exclamations per Kim tweet')
+
+fig.tight_layout()
+plt.show()
+
+
+"""
+Graph number of exclamations per Khloe tweet
+"""
+
+numbins = 20
+fig, ax = plt.subplots()
+x = num_exclamation_per_tweet("final_data/khloe_tweets_clean.txt")
+print x
+print "LENGTH OF X"
+print len(x)
+
+xx = []
+for i in x:
+	if i < 35:
+		xx.append(i)
+
+
+#the histogram of the data
+n, bins, patches = ax.hist(xx, numbins, color = 'y')
+
+#ax.plot(bins, y, '--')
+ax.set_ylabel('Number of tweets')
+ax.set_xlabel("Number of exclamations")
+ax.set_title('Number of exclamations per Khloe tweet')
+
+fig.tight_layout()
+plt.show()
+
